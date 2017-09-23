@@ -1,0 +1,28 @@
+{
+  "name": "gitup",
+  "version": "1.0.0",
+  "description": "\"git init\" on steroids",
+  "main": "index.js",
+  "keywords": [
+    "Git",
+    "CLI"
+  ],
+  "author": "Peter A. Weinberg <pweinberg633@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "clear": "0.0.1",
+    "clui": "^0.3.1",
+    "figlet": "^1.1.2",
+    "github": "^2.1.0",
+    "inquirer": "^1.1.0",
+    "lodash": "^4.13.1",
+    "minimist": "^1.2.0",
+    "preferences": "^0.2.1",
+    "simple-git": "^1.40.0",
+    "touch": "^1.0.0"
+  },
+  "bin": {
+    "gitup": "./index.js"
+  }
+}
