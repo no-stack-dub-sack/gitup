@@ -13,6 +13,7 @@ var CLI         = require('clui');
 var fs          = require('fs');
 var Spinner     = CLI.Spinner;
 
+var prefs = new Preferences('gitup');
 var github = new GitHubApi({
     version: '3.0.0'
 });
@@ -80,7 +81,6 @@ function getGithub2FACode(callback) {
 }
 
 function getGithubToken(callback) {
-    var prefs = new Preferences('ginit');
 
     if (prefs.github && prefs.github.token) {
         return callback(null, prefs.github.token);
@@ -88,7 +88,7 @@ function getGithubToken(callback) {
 
     // Fetch token
     getGithubCredentials(function(credentials) {
-        var status = new Spinner('Authenticating, please wait...');
+        let status = new Spinner('Authenticating, please wait...');
         status.start();
 
         github.authenticate(_.extend({ type: 'basic' }, credentials));
@@ -98,39 +98,63 @@ function getGithubToken(callback) {
             note: 'GitUp, a command-line tool for initalizing Git repos'
         }, function(err, res) {
             status.stop();
-            if (err.message.includes("Must specify two-factor authentication OTP code.")) {
+            // if user has 2FA enabled:
+            if (err) {
+                if (err.message.includes("Must specify two-factor authentication OTP code.")) {
+                    getGithub2FACode(function(twoFactor) {
+                        let status = new Spinner('Authenticating, please wait...');
+                        status.start();
 
-                getGithub2FACode(function(twoFactor) {
-                    github.authorization.create({
-                        scopes: ['user', 'public_repo', 'repo', 'repo:status'],
-                        note: 'GitUp, a command-line tool for initalizing Git repos',
-                        headers: {
-                            "X-GitHub-OTP": twoFactor.code
-                        }
-                    }, function(err, res) {
-                        if (err) {
-                            return callback(err);
-                        }
-                        if (res.token) {
-                            prefs.github = {
-                                token: res.token
-                            };
-                            return callback(null, res.token);
-                        }
-                        return callback();
+                        github.authorization.create({
+                            scopes: ['user', 'public_repo', 'repo', 'repo:status'],
+                            note: 'GitUp, a command-line tool for initalizing Git repos',
+                            headers: {
+                                "X-GitHub-OTP": twoFactor.code
+                            }
+                        }, function(err, res) {
+                            status.stop();
+                            if (err) {
+                                return callback(err);
+                            }
+                            if (res.token) {
+                                prefs.github = {
+                                    token: res.token
+                                };
+                                return callback(null, res.token);
+                            }
+                            return callback();
+                        });
                     });
-                });
-            } else if (err) {
-                return callback(err);
-            } else if (res.token) {
+                } else {
+                    return callback(err);
+                }
+            } 
+            if (res.token) {
                 prefs.github = {
                     token: res.token
                 };
                 return callback(null, res.token);
             }
-            // return callback();
         });
     });
+}
+
+function deletePersonalAccessToken(callback) {
+    var questions = [{
+        name: 'yesOrNo',
+            type: 'input',
+            message: 'Enter yes or no:',
+            validate: function(value) {
+                if (value.length) {
+                    return true;
+                } else {
+                    return 'y/n?';
+                }
+            }
+        }
+    ];
+
+    inquirer.prompt(questions).then(callback);
 }
 
 function createRepo(callback) {
@@ -227,7 +251,7 @@ function setupRepo( url, callback ) {
         .commit('Initial commit')
         .addRemote('origin', url)
         .push('origin', 'master')
-        .then(function(){
+        .exec(function(){
             status.stop();
             return callback();
         });
@@ -261,7 +285,12 @@ githubAuth(function(err, authed) {
         console.log(chalk.green('Sucessfully authenticated!'));
         createRepo(function(err, url){
             if (err) {
-                console.log('An error has occured');
+                console.log(chalk.red('An error has occured. If you deleted your personal access token, enter yes below and try again.'));
+                deletePersonalAccessToken(function(results) {
+                    if (results.yesOrNo === 'yes' || results.yesOrNo === 'y') {
+                        delete prefs.github.token;
+                    }
+                })
             }
             if (url) {
                 createGitignore(function() {
