@@ -22,6 +22,7 @@ clear();
 console.log(
     chalk.yellow(
         figlet.textSync('GitUp', {
+            font: 'isometric1',
             horizontalLayout: 'full'
         })
     )
@@ -128,7 +129,7 @@ function getGithubToken(callback) {
                 } else {
                     return callback(err);
                 }
-            } 
+            }
             if (res.token) {
                 prefs.github = {
                     token: res.token
