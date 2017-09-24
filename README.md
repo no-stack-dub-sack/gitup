@@ -22,7 +22,7 @@
 - After running the above, the `gitup` command will be available globally.
 - To use:
   - In an existing or new directory, run `gitup` or `gitup <my-repo-name> <my-repo-description>`
-  - The arguments are optional, and even if you use them, you will have the opportunity to change these fields later
+  - The arguments are optional, and even if you use them, you can always change these fields later
   - You will then be prompted for your Github username and password (don't worry, passwords are not stored, and personal access token are encrypted)
   - Then run through the setup wizard!
   - Enjoy!
