@@ -1,6 +1,6 @@
 ![image](https://user-images.githubusercontent.com/18563015/30778277-90c8b356-a09f-11e7-970f-2127e2a78eb6.png)
 
-# An intuitive, and sensationally easy to use CLI for initializing git repos
+## An intuitive, and sensationally easy to use CLI for initializing git repos
 
 ### Features:
 - Authenticate with Github once and forget!
@@ -9,6 +9,11 @@
 - .gitignore creation wizard, pick from a list of common defaults if your directory is empty, or choose from the files/folders in your root path
 - Adds all files in directory and commits with "initial commit"
 - Adds remote repository and pushes code
+
+### Requirements:
+- Git
+- NodeJS
+- A Github account
 
 ### How to install and use:
 - Clone repository
