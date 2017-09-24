@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/18563015/30778277-90c8b356-a09f-11e7-970f-2127e2a78eb6.png)
+![image](https://user-images.githubusercontent.com/18563015/30778335-4ed142c2-a0a1-11e7-845b-56105a006362.png)
 
 ## An intuitive, and sensationally easy to use CLI for initializing git repos
 
