@@ -129,8 +129,7 @@ function getGithubToken(callback) {
                 } else {
                     return callback(err);
                 }
-            }
-            if (res.token) {
+            } else if (res.token) {
                 prefs.github = {
                     token: res.token
                 };
