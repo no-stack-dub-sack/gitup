@@ -64,9 +64,10 @@ function getGithubCredentials(callback) {
 }
 
 function getGithub2FACode(callback) {
-    var questions = [{
-        name: 'code',
-            type: 'input',
+    var questions = [
+        {
+            name: 'code',
+            type: 'password',
             message: 'Enter your Github 2FA code:',
             validate: function(value) {
                 if (value.length) {
